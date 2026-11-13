@@ -1,14 +1,158 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+enum CategoriaPeriodo {
+  PRE_HISTORIA
+  ANTIGUIDADE
+  IDADE_MEDIA
+  IDADE_MODERNA
+  IDADE_CONTEMPORANEA
+}
+
+enum TipoDica {
+  COMO_ESTUDAR
+  APRENDIZAGEM
+  VESTIBULARES
+}
+
+
+
+model Periodo {
+  id             Int              @id @default(autoincrement())
+  categoria      CategoriaPeriodo
+  anoInicio      Int              @map("ano_inicio")
+  anoFim         Int?             @map("ano_fim")
+  figuraMarcante String           @map("figura_marcante")
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+
+  @@map("periodos")
+}
+
+
+
+model Noticia {
+  id          Int      @id @default(autoincrement())
+  titulo      String
+  categoria   String
+  linhaFina   String   @map("linha_fina") @db.Text
+  corpo       String   @db.Text
+  autor       String
+  fotoUrl     String?  @map("foto_url")
+  publicadaEm DateTime @default(now()) @map("publicada_em")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([publicadaEm])
+  @@map("noticias")
+}
+
+
+model Carreira {
+  id        Int      @id @default(autoincrement())
+  ordem     Int 
+  titulo    String
+  descricao String   @db.Text
+  ondeAtua  String   @map("onde_atua") @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("carreiras")
+}
+
+
+
+model Curso {
+  id        Int      @id @default(autoincrement())
+  ordem     Int
+  nome      String
+  descricao String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("cursos")
+}
+
+
+
+model Dica {
+  id        Int      @id @default(autoincrement())
+  tipo      TipoDica
+  ordem     Int
+  nome      String
+  descricao String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([tipo, ordem])
+  @@map("dicas")
+}
+
+
+
+model Estagio {
+  id        Int      @id @default(autoincrement())
+  ordem     Int
+  titulo    String
+  descricao String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("estagios")
+}
+
+
+model Questao {
+  id           Int           @id @default(autoincrement())
+  enunciado    String        @db.Text
+  explicacao   String?       @db.Text
+  alternativas Alternativa[]
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+
+  @@map("questoes")
+}
+
+model Alternativa {
+  id        Int     @id @default(autoincrement())
+  texto     String  @db.Text
+  correta   Boolean @default(false)
+  questaoId Int     @map("questao_id")
+  questao   Questao @relation(fields: [questaoId], references: [id], onDelete: Cascade)
+
+  @@index([questaoId])
+  @@map("alternativas")
+}
+
+
+model Video {
+  id        Int      @id @default(autoincrement())
+  titulo    String
+  categoria String
+  descricao String?  @db.Text
+  url       String
+  fonte     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("videos")
+}
+
+
+
+model Integrante {
+  id             Int      @id @default(autoincrement())
+  nome           String
+  cargo          String
+  descricaoCargo String   @map("descricao_cargo") @db.Text
+  fotoUrl        String?  @map("foto_url")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@map("integrantes")
 }
