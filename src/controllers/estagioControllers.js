@@ -78,26 +78,7 @@ export const atualizar = async (req, res) => {
         return res.status(500).json({ error: 'Erro ao atualizar registro.' });
     }
 };
-export const buscarPorId = async (req, res) => {
-    try {
-        const { id } = req.params;
 
-        if (isNaN(id)) {
-            return res.status(400).json({ error: 'O ID enviado não é um número válido.' });
-        }
-
-        const Noticia = await estagioModels.buscarPorId(parseInt(id));
-
-        if (!Noticia) {
-            return res.status(404).json({ error: 'Registro não encontrado.' });
-        }
-
-        return res.status(200).json({ data: Noticia });
-    } catch (error) {
-        console.error('Erro ao buscar:', error);
-        return res.status(500).json({ error: 'Erro ao buscar registro.' });
-    }
-};
 
 export const deletar = async (req, res) => {
     try {
@@ -107,15 +88,15 @@ export const deletar = async (req, res) => {
             return res.status(400).json({ error: 'ID inválido.' });
         }
 
-        const Noticia = await Noti.buscarPorId(parseInt(id));
+        const Estagio = await Estagio.buscarPorId(parseInt(id));
 
-        if (!Noticia) {
+        if (!Estagio) {
             return res.status(404).json({ error: 'Registro não encontrado para deletar.' });
         }
 
-        await Noticia.deletar();
+        await Estagio.deletar();
 
-        return res.status(200).json({ message: `O registro ${Noticia.titulo}" foi deletado com sucesso!, deletado: Dica `});
+        return res.status(200).json({ message: `O registro ${Estagio.titulo}" foi deletado com sucesso!, deletado: Dica `});
     } catch (error) {
         console.error('Erro ao deletar:', error);
         return res.status(500).json({ error: 'Erro ao deletar registro.' });
