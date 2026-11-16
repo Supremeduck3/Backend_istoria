@@ -52,11 +52,7 @@ export default class cursoModel {
         }
         return new Cursos(data);
     }
-      async deletar() {
-    return prisma.cursos.delete({ where: { id: this.id } });
-  }
-
-
-
-
+    async deletar() {
+        return prisma.cursos.delete({ where: { id: this.id } });
+    }
 }

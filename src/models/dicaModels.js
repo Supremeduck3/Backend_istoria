@@ -1,6 +1,7 @@
 import prisma from "@prisma/client";
 
-export default class cursoModel {
+
+export default class dicaModel {
     constructor({
         id = null,
         ordem,
@@ -13,49 +14,49 @@ export default class cursoModel {
         this.id = id;
         this.ordem = ordem;
         this.nome = nome;
-        this.tipo = tipo;
         this.descricao = descricao;
+        this.tipo = tipo,
         this.criadaEm = criadaEm;
         this.atualizadaEm = atualizadaEm;
     }
     async criar() {
-        return prisma.cursos.create({
+        return prisma.dicas.create({
             data: {
                 ordem: this.ordem,
                 nome: this.nome,
-                tipo: this.tipo,
                 descricao: this.descricao,
+                tipo: this.tipo,
                 criadaEm: this.criadaEm,
                 atualizadaEm: this.atualizadaEm,
             },
         })
     }
 
+
     async atualizar() {
-        return prisma.cursos.update({
+        return prisma.dicas.update({
             where: { id: this.id },
             data: {
                 ordem: this.ordem,
                 nome: this.nome,
-                tipo: this.tipo
                 descricao: this.descricao,
+                tipo: this.tipo,
             },
         });
     }
     static async buscarTodos() {
-        return prisma.cursos.findMany();
+        return prisma.dicas.findMany();
     }
 
+
     static async buscarPorId(id) {
-        const data = await prisma.cursos.findUnique({ where: { id } });
+        const data = await prisma.dicas.findUnique({ where: { id } });
         if (!data) {
             return null;
         }
-        return new Cursos(data);
+        return new dicas(data);
     }
       async deletar() {
-    return prisma.cursos.delete({ where: { id: this.id } });
+    return prisma.dicas.delete({ where: { id: this.id } });
   }
-
-
 }
