@@ -4,12 +4,10 @@ export default class noticiasModels{
     constructor({
         id=null,
         titulo,
-        slug,
         resumo,
         conteudo,
         imagemUrl,
         publicadaEm,
-        ativa,
         destaque,
         temaId,
         criadaEm,
