@@ -1,4 +1,3 @@
-import {json} from 'express';
 import carreiraModel from '../../models';
 
 export const criar = async (req, res) => {
