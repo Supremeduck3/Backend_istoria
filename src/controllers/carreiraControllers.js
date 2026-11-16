@@ -35,7 +35,7 @@ export const atualizar = async (req, res) => {
             return res.status(400).json({ error: 'Corpo da requisição vazio. Envie os dados!' });
         }
 
-        const carreira = await carreiraModel.buscarPorId(parseInt(id));
+        const carreiras = await carreiraModel.buscarPorId(parseInt(id));
 
         if (!carreiras) {
             return res.status(404).json({ error: 'Registro não encontrado para atualizar.' });
