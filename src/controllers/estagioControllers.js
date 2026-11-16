@@ -1,4 +1,4 @@
-import estagioModels from "./../models/estagioModels"
+import estagioModel from "./../models/estagioModels"
 
 export const criar = async (req, res) => {
 
@@ -19,7 +19,7 @@ export const criar = async (req, res) => {
         if (!ordem || !titulo || !descricao) {
             return res.status(400).json({ error: 'O campo de Categoria, Titulo, linha_fina, corpo do texto e autor, não podem estar vazios' });
         }
-        const estagio = new estagioModels({ ordem, titulo,descricao});
+        const estagio = new estagioModel({ ordem, titulo,descricao});
 
         const data = await estagio.criar();
         return res.status(201).json({message: 'Registro foi criado certo', data});
@@ -31,7 +31,7 @@ export const criar = async (req, res) => {
 
 export const buscarTodos = async (req, res ) => {
     try{
-        const registros = new estagioModels.buscarTodos(req.query);
+        const registros = new estagioModel.buscarTodos(req.query);
 
     if(!registros || registros.length === 0){
         return res.status(400).json({error:"Registros vazios"});
@@ -54,7 +54,7 @@ export const atualizar = async (req, res) => {
             return res.status(400).json({ error: 'Corpo da requisição vazio. Envie os dados!' });
         }
 
-        const estagio = await estagioModels.buscarPorId(parseInt(id));
+        const estagio = await estagioModel.buscarPorId(parseInt(id));
 
         if (!estagio) {
             return res.status(404).json({ error: 'Registro não encontrado para atualizar.' });
@@ -88,7 +88,7 @@ export const deletar = async (req, res) => {
             return res.status(400).json({ error: 'ID inválido.' });
         }
 
-        const Estagio = await Estagio.buscarPorId(parseInt(id));
+        const Estagio = await estagioModel.buscarPorId(parseInt(id));
 
         if (!Estagio) {
             return res.status(404).json({ error: 'Registro não encontrado para deletar.' });
