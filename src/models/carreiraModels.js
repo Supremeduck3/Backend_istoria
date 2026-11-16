@@ -62,7 +62,4 @@ export default class carreiraModel {
     return prisma.carreira.delete({ where: { id: this.id } });
   }
 
-
-
-
 }

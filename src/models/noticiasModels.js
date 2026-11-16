@@ -1,46 +1,73 @@
 import prisma from "@prisma/client";
 
-export default class noticiasModels{
+
+export default class noticiasModel {
     constructor({
-        id=null,
+        id = null,
         titulo,
-        resumo,
-        conteudo,
-        imagemUrl,
+        categoria,
+        linhaFina,
+        corpo,
+        autor,
+        fotoUrl,
         publicadaEm,
-        destaque,
-        temaId,
         criadaEm,
         atualizadaEm
-    }={}){
-        this.id =id;
+    } = {}) {
+        this.id = id;
         this.titulo = titulo;
-        this.slug = slug;
-        this.resumo = resumo;
-        this.conteudo = conteudo;
-        this.imagemUrl = imagemUrl;
+        this.categoria = categoria;
+        this.linhaFina = linhaFina;
+        this.corpo = corpo;
+        this.autor = autor;
+        this.fotoUrl = fotoUrl;
         this.publicadaEm = publicadaEm;
-        this.ativa = ativa;
-        this.destaque = destaque;
-        this.temaId = temaId;
         this.criadaEm = criadaEm;
         this.atualizadaEm = atualizadaEm;
     }
-    async criar(){
+    async criar() {
         return prisma.noticias.create({
-            data:{
-                titulo : this.titulo,
-                slug :this.slug,
-                resumo : this.resumo,
-                conteudo : this.conteudo,
-                imagemUrl : this.imagemUrl,
-                publicadaEm : this.publicadaEm,
-                ativa : this.ativa,
-                destaque : this.destaque,
-                temaId : this.temaId,
-                criadaEm : this.criadaEm, 
-                atualizadaEm : this.atualizadaEm,
+            data: {
+                titulo: this.titulo,
+                categoria: this.categoria,
+                linhaFina: this.linhaFina,
+                corpo: this.corpo,
+                autor: this.autor,
+                fotoUrl: this.fotoUrl,
+                publicadaEm: this.publicadaEm,
+                criadaEm: this.criadaEm,
+                atualizadaEm: this.atualizadaEm
             },
         })
+    }
+
+
+    async atualizar() {
+        return prisma.noticias.update({
+            where: { id: this.id },
+            data: {
+                                titulo: this.titulo,
+                categoria: this.categoria,
+                linhaFina: this.linhaFina,
+                corpo: this.corpo,
+                autor: this.autor,
+                fotoUrl: this.fotoUrl,
+            },
+        });
+    }
+    static async buscarTodos() {
+        return prisma.noticias.findMany();
+    }
+
+
+    static async buscarPorId(id) {
+        const data = await prisma.noticias.findUnique({ where: { id } });
+        if (!data) {
+            return null;
+        }
+        return new noticias(data);
+    }
+    async deletar() {
+        return prisma.noticias.delete({ where: { id: this.id } });
     }
 }
