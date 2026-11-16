@@ -1,4 +1,4 @@
-import carreiraModel from '../../models';
+import carreirasModel from './../models/carreiraModel.js';
 
 export const criar = async (req, res) => {
 
@@ -14,7 +14,7 @@ export const criar = async (req, res) => {
         if(!titulo || !descricao || !ondeAtua) {
             return res.status(400).json({error: 'Os campos título descrição e onde atua são obrigatórios e não podem ser vazios!'});
         }
-        const carreira = carreiraModel({titulo, descricao, ondeAtua});
+        const carreira = carreirasModel({titulo, descricao, ondeAtua});
 
         const data = await carreira.criar();
         return res.status(201).json({message: 'Registro foi criado corretamente', data});
@@ -35,7 +35,7 @@ export const atualizar = async (req, res) => {
             return res.status(400).json({ error: 'Corpo da requisição vazio. Envie os dados!' });
         }
 
-        const carreiras = await carreiraModel.buscarPorId(parseInt(id));
+        const carreiras = await carreirasModel.buscarPorId(parseInt(id));
 
         if (!carreiras) {
             return res.status(404).json({ error: 'Registro não encontrado para atualizar.' });
@@ -87,7 +87,7 @@ export const deletar = async (req, res) => {
             return res.status(400).json({ error: 'ID inválido.' });
         }
 
-        const Carreira = await Carreira.buscarPorId(parseInt(id));
+        const Carreira = await carreirasModel.buscarPorId(parseInt(id));
 
         if (!Carreira) {
             return res.status(404).json({ error: 'Registro não encontrado para deletar.' });
