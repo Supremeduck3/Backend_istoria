@@ -1,35 +1,61 @@
 import prisma from "@prisma/client";
 
-export default class dicaModel{
+export default class cursoModel {
     constructor({
-    id=null,
-    ordem,
-    tipo,
-    nome,
-    descricao,
-    criadaEm,
-    atualizadaEm
-} = {}){
-    this.id = id;
-    this.ordem = ordem;
-    this.tipo = tipo;
-    this.nome = nome;
-    this.descricao = descricao;
-    this.destaque = destaque;
-    this.criadaEm = criadaEm;
-    this.atualizadaEm = atualizadaEm;
-}
-    async criar(){
-    return prisma.noticias.create({
-        data: {
-            ordem: this.ordem,
-            nome: this.nome,
-            tipo: this.tipo,
-            ondeAtua: this.ondeAtua,
-            descricao: this.descricao,
-            criadaEm: this.criadaEm,
-            atualizadaEm: this.atualizadaEm,
+        id = null,
+        ordem,
+        nome,
+        descricao,
+        tipo,
+        criadaEm,
+        atualizadaEm
+    } = {}) {
+        this.id = id;
+        this.ordem = ordem;
+        this.nome = nome;
+        this.tipo = tipo;
+        this.descricao = descricao;
+        this.criadaEm = criadaEm;
+        this.atualizadaEm = atualizadaEm;
+    }
+    async criar() {
+        return prisma.cursos.create({
+            data: {
+                ordem: this.ordem,
+                nome: this.nome,
+                tipo: this.tipo,
+                descricao: this.descricao,
+                criadaEm: this.criadaEm,
+                atualizadaEm: this.atualizadaEm,
             },
         })
     }
+
+    async atualizar() {
+        return prisma.cursos.update({
+            where: { id: this.id },
+            data: {
+                ordem: this.ordem,
+                nome: this.nome,
+                tipo: this.tipo
+                descricao: this.descricao,
+            },
+        });
+    }
+    static async buscarTodos() {
+        return prisma.cursos.findMany();
+    }
+
+    static async buscarPorId(id) {
+        const data = await prisma.cursos.findUnique({ where: { id } });
+        if (!data) {
+            return null;
+        }
+        return new Cursos(data);
+    }
+      async deletar() {
+    return prisma.cursos.delete({ where: { id: this.id } });
+  }
+
+
 }

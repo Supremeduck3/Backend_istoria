@@ -21,7 +21,7 @@ export default class carreiraModel {
         this.atualizadaEm = atualizadaEm;
     }
     async criar() {
-        return prisma.noticias.create({
+        return prisma.carreira.create({
             data: {
                 ordem: this.ordem,
                 titulo: this.titulo,
@@ -56,7 +56,7 @@ export default class carreiraModel {
         return new Carreira(data);
     }
       async deletar() {
-    return prisma.careira.delete({ where: { id: this.id } });
+    return prisma.carreira.delete({ where: { id: this.id } });
   }
 
 
