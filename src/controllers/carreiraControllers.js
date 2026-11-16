@@ -13,12 +13,12 @@ export const criar = async (req, res) => {
             return res.status(400).json({error: "Os campos título, descrição e onde atua devem ser caracteres(String) "});
         }
         if(!titulo || !descricao || !ondeAtua) {
-            return res.status(400).json({error: 'Os campos títulom descrição e onde atua são obrigatórios e não podem ser vazios!'});
+            return res.status(400).json({error: 'Os campos título descrição e onde atua são obrigatórios e não podem ser vazios!'});
         }
         const carreira = carreiraModel({titulo, descricao, ondeAtua});
 
         const data = await carreira.criar();
-        return res.statis(201).json({message: 'Registro foi criado corretamente', data});
+        return res.status(201).json({message: 'Registro foi criado corretamente', data});
     } catch(error){
         console.error('Erro ao criar', error);
         return res.status(500).json({error: 'Erro interno ao salvar registro'});
