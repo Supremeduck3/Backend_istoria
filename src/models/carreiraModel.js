@@ -1,4 +1,4 @@
-import prisma from "@prisma/client";
+import prisma from '../lib/prismaClient.js';
 
 
 export default class carreirasModel {
@@ -22,7 +22,7 @@ export default class carreirasModel {
         this.atualizadaEm = atualizadaEm;
     }
     async criar() {
-        return prisma.Carreira.create({
+        return prisma.carreira.create({
             data: {
                 ordem: this.ordem,
                 titulo: this.titulo,
@@ -36,7 +36,7 @@ export default class carreirasModel {
 
 
     async atualizar() {
-        return prisma.Carreira.update({
+        return prisma.carreira.update({
             where: { id: this.id },
             data: {
                 ordem: this.ordem,
@@ -47,19 +47,19 @@ export default class carreirasModel {
         });
     }
     static async buscarTodos() {
-        return prisma.Carreira.findMany();
+        return prisma.carreira.findMany();
     }
 
 
     static async buscarPorId(id) {
-        const data = await prisma.Carreira.findUnique({ where: { id } });
+        const data = await prisma.carreira.findUnique({ where: { id } });
         if (!data) {
             return null;
         }
-        return new Carreira(data);
+        return new carreira(data);
     }
       async deletar() {
-    return prisma.Carreira.delete({ where: { id: this.id } });
+    return prisma.carreira.delete({ where: { id: this.id } });
   }
 
 }
