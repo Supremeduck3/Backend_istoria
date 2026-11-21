@@ -1,3 +1,10 @@
+// Schema do Portal de História
+// Os nomes dos models seguem exatamente o que src/models/*.js chama:
+//   prisma.periodo, prisma.noticias, prisma.carreira, prisma.cursos,
+//   prisma.dicas, prisma.estagio, prisma.simulado, prisma.video, prisma.integrante
+// Os timestamps se chamam criadaEm / atualizadaEm (como nos models),
+// mas no banco viram created_at / updated_at.
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -5,6 +12,8 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+// ---------- ENUMS ----------
 
 enum CategoriaPeriodo {
   PRE_HISTORIA
@@ -20,130 +29,141 @@ enum TipoDica {
   VESTIBULARES
 }
 
-
+// ---------- PERÍODOS HISTÓRICOS ----------
+// Anos antes de Cristo são negativos (ex.: 4000 a.C. = -4000).
 
 model Periodo {
   id             Int              @id @default(autoincrement())
-  categoria      CategoriaPeriodo
+  categoria      CategoriaPeriodo @unique
   anoInicio      Int              @map("ano_inicio")
-  anoFim         Int?             @map("ano_fim")
+  anoFim         Int?             @map("ano_fim") // null = período atual
   figuraMarcante String           @map("figura_marcante")
-  createdAt      DateTime         @default(now()) @map("created_at")
-  updatedAt      DateTime         @updatedAt @map("updated_at")
+  criadaEm       DateTime         @default(now()) @map("created_at")
+  atualizadaEm   DateTime         @updatedAt @map("updated_at")
 
   @@map("periodos")
 }
 
+// ---------- NOTÍCIAS ----------
 
-
-model Noticia {
-  id          Int      @id @default(autoincrement())
-  titulo      String
-  categoria   String
-  linhaFina   String   @map("linha_fina") @db.Text
-  corpo       String   @db.Text
-  autor       String
-  fotoUrl     String?  @map("foto_url")
-  publicadaEm DateTime @default(now()) @map("publicada_em")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+model Noticias {
+  id           Int      @id @default(autoincrement())
+  titulo       String
+  categoria    String
+  linhaFina    String   @map("linha_fina") @db.Text
+  corpo        String   @db.Text
+  autor        String
+  fotoUrl      String?  @map("foto_url")
+  publicadaEm  DateTime @default(now()) @map("publicada_em")
+  criadaEm     DateTime @default(now()) @map("created_at")
+  atualizadaEm DateTime @updatedAt @map("updated_at")
 
   @@index([publicadaEm])
   @@map("noticias")
 }
 
+// ---------- CARREIRAS ----------
 
 model Carreira {
-  id        Int      @id @default(autoincrement())
-  ordem     Int 
-  titulo    String
-  descricao String   @db.Text
-  ondeAtua  String   @map("onde_atua") @db.Text
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id           Int      @id @default(autoincrement())
+  ordem        Int      @default(0)
+  titulo       String
+  descricao    String   @db.Text
+  ondeAtua     String   @map("onde_atua") @db.Text
+  criadaEm     DateTime @default(now()) @map("created_at")
+  atualizadaEm DateTime @updatedAt @map("updated_at")
 
+  @@index([ordem])
   @@map("carreiras")
 }
 
+// ---------- CURSOS ----------
 
+model Cursos {
+  id           Int      @id @default(autoincrement())
+  ordem        Int      @default(0)
+  nome         String
+  descricao    String   @db.Text
+  criadaEm     DateTime @default(now()) @map("created_at")
+  atualizadaEm DateTime @updatedAt @map("updated_at")
 
-model Curso {
-  id        Int      @id @default(autoincrement())
-  ordem     Int
-  nome      String
-  descricao String   @db.Text
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
+  @@index([ordem])
   @@map("cursos")
 }
 
+// ---------- DICAS ----------
 
-
-model Dica {
-  id        Int      @id @default(autoincrement())
-  tipo      TipoDica
-  ordem     Int
-  nome      String
-  descricao String   @db.Text
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+model Dicas {
+  id           Int      @id @default(autoincrement())
+  tipo         TipoDica
+  ordem        Int      @default(0)
+  nome         String
+  descricao    String   @db.Text
+  criadaEm     DateTime @default(now()) @map("created_at")
+  atualizadaEm DateTime @updatedAt @map("updated_at")
 
   @@index([tipo, ordem])
   @@map("dicas")
 }
 
-
+// ---------- ESTÁGIO ----------
 
 model Estagio {
-  id        Int      @id @default(autoincrement())
-  ordem     Int
-  titulo    String
-  descricao String   @db.Text
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id           Int      @id @default(autoincrement())
+  ordem        Int      @default(0)
+  titulo       String
+  descricao    String   @db.Text
+  criadaEm     DateTime @default(now()) @map("created_at")
+  atualizadaEm DateTime @updatedAt @map("updated_at")
 
+  @@index([ordem])
   @@map("estagios")
 }
 
+// ---------- SIMULADO (questão + alternativas) ----------
+// Para criar com alternativas:
+//   prisma.simulado.create({ data: { enunciado, alternativa: { create: [{ texto, correta }] } } })
 
-model Questao {
+model Simulado {
   id           Int           @id @default(autoincrement())
   enunciado    String        @db.Text
   explicacao   String?       @db.Text
-  alternativas Alternativa[]
-  createdAt    DateTime      @default(now()) @map("created_at")
-  updatedAt    DateTime      @updatedAt @map("updated_at")
+  alternativa  Alternativa[]
+  criadaEm     DateTime      @default(now()) @map("created_at")
+  atualizadaEm DateTime      @updatedAt @map("updated_at")
 
-  @@map("questoes")
+  @@map("simulados")
 }
 
 model Alternativa {
-  id        Int     @id @default(autoincrement())
-  texto     String  @db.Text
-  correta   Boolean @default(false)
-  questaoId Int     @map("questao_id")
-  questao   Questao @relation(fields: [questaoId], references: [id], onDelete: Cascade)
+  id         Int      @id @default(autoincrement())
+  letra      String   @db.Char(1) // A, B, C, D, E
+  texto      String   @db.Text
+  correta    Boolean  @default(false)
+  simuladoId Int      @map("simulado_id")
+  simulado   Simulado @relation(fields: [simuladoId], references: [id], onDelete: Cascade)
 
-  @@index([questaoId])
+  @@unique([simuladoId, letra])
+  @@index([simuladoId])
   @@map("alternativas")
 }
 
+// ---------- VÍDEOS ----------
 
 model Video {
-  id        Int      @id @default(autoincrement())
-  titulo    String
-  categoria String
-  descricao String?  @db.Text
-  url       String
-  fonte     String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id           Int      @id @default(autoincrement())
+  titulo       String
+  categoria    String
+  descricao    String?  @db.Text
+  url          String
+  fonte        String
+  criadaEm     DateTime @default(now()) @map("created_at")
+  atualizadaEm DateTime @updatedAt @map("updated_at")
 
   @@map("videos")
 }
 
-
+// ---------- INTEGRANTES DA EQUIPE ----------
 
 model Integrante {
   id             Int      @id @default(autoincrement())
@@ -151,8 +171,8 @@ model Integrante {
   cargo          String
   descricaoCargo String   @map("descricao_cargo") @db.Text
   fotoUrl        String?  @map("foto_url")
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
+  criadaEm       DateTime @default(now()) @map("created_at")
+  atualizadaEm   DateTime @updatedAt @map("updated_at")
 
   @@map("integrantes")
 }
