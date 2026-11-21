@@ -1,5 +1,5 @@
 import {json} from 'express';
-import cursoModel from '../../models';
+import cursoModel from './../models/cursosModel.js';
 
 export const criar = async (req, res) => {
 

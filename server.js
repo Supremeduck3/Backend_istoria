@@ -3,6 +3,7 @@ import cors from 'cors';
 const app = express();
 
 import carreirasRoutes from './../Backend_istoria/src/routes/carreirasRoutes.js'
+import cursosRoutes from './src/routes/cursosRoutes.js'
 
 app.use(cors());
 app.use(express.json());
@@ -15,7 +16,8 @@ app.get('/', (req,res)=>{
 
 //rotas
 
-app.use('/api/carreiras',carreirasRoutes);
+app.use('/carreiras',carreirasRoutes);
+app.use('/cursos',cursosRoutes);
 
 
 app.use((req,res)=>{
