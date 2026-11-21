@@ -1,4 +1,4 @@
-import prisma from "@prisma/client";
+import prisma from "../lib/prismaClient.js";
 
 
 export default class integranteModel {
