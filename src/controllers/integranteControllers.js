@@ -1,4 +1,4 @@
-import integranteModel from './../models/integranteModel.js'
+import integranteModel from './../models/integranteModel.js';
 
 export const deletar = async (req, res) => {
     try {
@@ -16,23 +16,57 @@ export const deletar = async (req, res) => {
 
         await integrante.deletar();
 
-        return res.status(200).json({ message: `O registro ${integrante.titulo}" foi deletado com sucesso!, deletado: Dica `});
+        return res
+            .status(200)
+            .json({
+                message: `O registro ${integrante.titulo}" foi deletado com sucesso!, deletado: Dica `,
+            });
     } catch (error) {
         console.error('Erro ao deletar:', error);
         return res.status(500).json({ error: 'Erro ao deletar registro.' });
     }
 };
 
-export const buscarTodos = async (req, res ) => {
-    try{
+export const buscarTodos = async (req, res) => {
+    try {
         const registros = new integranteModel.buscarTodos(req.query);
 
-    if(!registros || registros.length === 0){
-        return res.status(400).json({error:"Registros vazios"});
-    }
-    return res.status(200).json(registros);
-    }catch (error){
+        if (!registros || registros.length === 0) {
+            return res.status(400).json({ error: 'Registros vazios' });
+        }
+        return res.status(200).json(registros);
+    } catch (error) {
         console.error('Erro ao buscar registros');
     }
+};
 
-}
+export const criar = async (req, res) => {
+    try {
+        if (!req.body) {
+            return res.status(400).json({ error: 'A requisição está vazia' });
+        }
+        const campos = { nome,cargo,descricaoCargo,fotoUrl };
+
+        if (campos.some((campo) => typeof campo != 'string')) {
+            return res
+                .status(400)
+                .json({
+                    error: 'Os campos nome,cargo,descricao do cargo e foto Url e onde atua devem ser caracteres(String) ',
+                });
+        }
+        if (!nome || !cargo || !descricaoCargo) {
+            return res
+                .status(400)
+                .json({
+                    error: 'Os campos nome, cargo e descricao do cargo e onde atua são obrigatórios e não podem ser vazios!',
+                });
+        }
+        const integrante = integranteModel({ nome, cargo, descricaoCargo,fotoUrl });
+
+        const data = await integrante.criar();
+        return res.status(201).json({ message: 'Registro foi criado corretamente', data });
+    } catch (error) {
+        console.error('Erro ao criar', error);
+        return res.status(500).json({ error: 'Erro interno ao salvar registro' });
+    }
+};
