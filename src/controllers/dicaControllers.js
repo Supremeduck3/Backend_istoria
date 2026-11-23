@@ -1,5 +1,5 @@
 import {json} from 'express';
-import dicaModel from '../../models';
+import dicaModel from './../models/dicaModel.js'
 
 export const criar = async (req, res) => {
 
@@ -7,7 +7,7 @@ export const criar = async (req, res) => {
         if(!req.body) {
             return res.status(400).json({error: 'A requisição está vazia'});
         }
-        const campos = {tipo, nome, descricao} 
+        const campos = {tipo, nome, descricao}
 
         if(campos.some(campo => typeof campo != 'string')){
             return res.status(400).json({error: "Os campos tipo, descrição e nome devem ser caracteres(String) "});

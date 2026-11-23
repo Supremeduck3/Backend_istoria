@@ -1,5 +1,4 @@
-import estagioModels from "./../models/estagioModels"
-
+import videoModel from './../models/videoModel.js'
 export const criar = async (req, res) => {
 
     try {
@@ -40,7 +39,7 @@ export const buscarTodos = async (req, res ) => {
     }catch (error){
         console.error('Erro ao buscar registros');
     }
-    
+
 }
 export const atualizar = async (req, res) => {
     try {

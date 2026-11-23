@@ -1,4 +1,4 @@
-import integranteModel from './../models/';
+import integranteModel from './../models/integranteModel.js'
 
 export const deletar = async (req, res) => {
     try {
@@ -34,5 +34,5 @@ export const buscarTodos = async (req, res ) => {
     }catch (error){
         console.error('Erro ao buscar registros');
     }
-    
+
 }

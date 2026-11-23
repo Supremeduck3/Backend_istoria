@@ -1,5 +1,5 @@
 import { json } from 'express';
-import noticiasModel from './../models/';
+import noticiasModel from './../models/noticiasModel.js'
 
 export const criar = async (req, res) => {
 
@@ -44,7 +44,7 @@ export const buscarTodos = async (req, res ) => {
     }catch (error){
         console.error('Erro ao buscar registros');
     }
-    
+
 }
 export const atualizar = async (req, res) => {
     try {
