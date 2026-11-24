@@ -1,4 +1,4 @@
-import dicasModel from './../models/dicaModel.js'
+import dicaModel from './../models/dicaModel.js'
 
 export const criar = async (req, res) => {
 
@@ -67,7 +67,7 @@ export const buscarPorId = async (req, res) => {
             return res.status(400).json({ error: 'O ID enviado não é um número válido.' });
         }
 
-        const Dica = await dicasModel.buscarPorId(parseInt(id));
+        const Dica = await dicaModel.buscarPorId(parseInt(id));
 
         if (!Dica) {
             return res.status(404).json({ error: 'Registro não encontrado.' });

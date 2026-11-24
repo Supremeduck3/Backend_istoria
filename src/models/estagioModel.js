@@ -51,7 +51,7 @@ export default class estagioModel {
         if (!data) {
             return null;
         }
-        return new estagio(data);
+        return new estagioModel(data);
     }
       async deletar() {
     return prisma.estagio.delete({ where: { id: this.id } });

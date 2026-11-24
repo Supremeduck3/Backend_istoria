@@ -54,7 +54,7 @@ export default class carreirasModel {
         if (!data) {
             return null;
         }
-        return new carreira(data);
+        return new carreirasModel(data);
     }
       async deletar() {
     return prisma.carreira.delete({ where: { id: this.id } });
