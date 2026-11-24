@@ -18,7 +18,7 @@ export const criar = async (req, res) => {
         if (!ordem || !titulo || !descricao) {
             return res.status(400).json({ error: 'O campo de Categoria, Titulo, linha_fina, corpo do texto e autor, não podem estar vazios' });
         }
-        const estagio = new estagioModels({ ordem, titulo,descricao});
+        const estagio = new videoModel({ ordem, titulo,descricao});
 
         const data = await estagio.criar();
         return res.status(201).json({message: 'Registro foi criado certo', data});

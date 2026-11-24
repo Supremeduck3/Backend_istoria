@@ -20,7 +20,7 @@ export default class dicaModel {
         this.atualizadaEm = atualizadaEm;
     }
     async criar() {
-        return prisma.dicas.create({
+        return prisma.dica.create({
             data: {
                 ordem: this.ordem,
                 nome: this.nome,
@@ -34,7 +34,7 @@ export default class dicaModel {
 
 
     async atualizar() {
-        return prisma.dicas.update({
+        return prisma.dica.update({
             where: { id: this.id },
             data: {
                 ordem: this.ordem,
@@ -45,18 +45,18 @@ export default class dicaModel {
         });
     }
     static async buscarTodos() {
-        return prisma.dicas.findMany();
+        return prisma.dica.findMany();
     }
 
 
     static async buscarPorId(id) {
-        const data = await prisma.dicas.findUnique({ where: { id } });
+        const data = await prisma.dica.findUnique({ where: { id } });
         if (!data) {
             return null;
         }
         return new dicas(data);
     }
       async deletar() {
-    return prisma.dicas.delete({ where: { id: this.id } });
+    return prisma.dica.delete({ where: { id: this.id } });
   }
 }

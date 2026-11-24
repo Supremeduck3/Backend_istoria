@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 const app = express();
 
-import carreirasRoutes from './../Backend_istoria/src/routes/carreirasRoutes.js';
+import carreirasRoutes from './src/routes/carreirasRoutes.js';
 import cursosRoutes from './src/routes/cursosRoutes.js';
 import dicasRoutes from './src/routes/dicaRoutes.js';
 import estagioRoutes from './src/routes/estagioRoutes.js';

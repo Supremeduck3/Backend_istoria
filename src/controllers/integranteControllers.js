@@ -62,7 +62,7 @@ export const criar = async (req, res) => {
                     error: 'Os campos nome, cargo e descricao do cargo e onde atua são obrigatórios e não podem ser vazios!',
                 });
         }
-        const integrante = integranteModel({ nome, cargo, descricaoCargo,fotoUrl });
+        const integrante = new integranteModel({ nome, cargo, descricaoCargo,fotoUrl });
 
         const data = await integrante.criar();
         return res.status(201).json({ message: 'Registro foi criado corretamente', data });

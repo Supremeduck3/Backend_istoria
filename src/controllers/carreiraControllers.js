@@ -15,7 +15,7 @@ export const criar = async (req, res) => {
         if(!titulo || !descricao || !ondeAtua) {
             return res.status(400).json({error: 'Os campos título descrição e onde atua são obrigatórios e não podem ser vazios!'});
         }
-        const carreira = carreirasModel({titulo, descricao, ondeAtua});
+        const carreira = new carreirasModel({titulo, descricao, ondeAtua});
 
         const data = await carreira.criar();
         return res.status(201).json({message: 'Registro foi criado corretamente', data});
