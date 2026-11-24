@@ -1,4 +1,4 @@
-import {json} from 'express';
+
 import cursoModel from './../models/cursosModel.js';
 
 export const criar = async (req, res) => {
@@ -7,7 +7,8 @@ export const criar = async (req, res) => {
         if(!req.body) {
             return res.status(400).json({error: 'A requisição está vazia'});
         }
-        const campos = { nome, descricao} 
+         const {nome, descricao} = req.body;
+        const campos = [ nome, descricao]
 
         if(campos.some(campo => typeof campo != 'string')){
             return res.status(400).json({error: "Os campos nome e descrição devem ser caracteres(String) "});

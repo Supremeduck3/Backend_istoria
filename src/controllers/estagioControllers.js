@@ -31,7 +31,7 @@ export const criar = async (req, res) => {
 
 export const buscarTodos = async (req, res ) => {
     try{
-        const registros = new estagioModel.buscarTodos(req.query);
+        const registros = await estagioModel.buscarTodos(req.query);
 
     if(!registros || registros.length === 0){
         return res.status(400).json({error:"Registros vazios"});

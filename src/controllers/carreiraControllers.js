@@ -6,7 +6,8 @@ export const criar = async (req, res) => {
         if(!req.body) {
             return res.status(400).json({error: 'A requisição está vazia'});
         }
-        const campos = {titulo, descricao, ondeAtua} 
+        const {titulo, descricao, ondeAtua} = req.body;
+        const campos = [titulo, descricao, ondeAtua]
 
         if(campos.some(campo => typeof campo != 'string')){
             return res.status(400).json({error: "Os campos título, descrição e onde atua devem ser caracteres(String) "});
