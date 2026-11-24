@@ -1,5 +1,4 @@
-import {json} from 'express';
-import dicaModel from './../models/dicaModel.js'
+import dicasModel from './../models/dicaModel.js'
 
 export const criar = async (req, res) => {
 
@@ -16,7 +15,7 @@ export const criar = async (req, res) => {
         if(!tipo || !descricao || !nome) {
             return res.status(400).json({error: 'Os campos tipo, descrição e nome são obrigatórios e não podem ser vazios!'});
         }
-        const dica = dicaModel({tipo, descricao, nome});
+        const dica = new dicaModel({tipo, descricao, nome});
 
         const data = await dica.criar();
         return res.status(201).json({message: 'Registro foi criado corretamente', data});

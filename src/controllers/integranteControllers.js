@@ -46,7 +46,7 @@ export const criar = async (req, res) => {
             return res.status(400).json({ error: 'A requisição está vazia' });
         }
         const { nome,cargo,descricaoCargo,fotoUrl } = req.body;
-        const campos = { nome,cargo,descricaoCargo,fotoUrl };
+        const campos =  [nome,cargo,descricaoCargo,fotoUrl ];
 
         if (campos.some((campo) => typeof campo != 'string')) {
             return res
@@ -62,7 +62,7 @@ export const criar = async (req, res) => {
                     error: 'Os campos nome, cargo e descricao do cargo e onde atua são obrigatórios e não podem ser vazios!',
                 });
         }
-        const integrante = integranteModel({ nome, cargo, descricaoCargo,fotoUrl });
+        const integrante = new integranteModel({ nome, cargo, descricaoCargo,fotoUrl });
 
         const data = await integrante.criar();
         return res.status(201).json({ message: 'Registro foi criado corretamente', data });

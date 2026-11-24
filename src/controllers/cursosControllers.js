@@ -16,7 +16,7 @@ export const criar = async (req, res) => {
         if(!tipo || !descricao || !nome) {
             return res.status(400).json({error: 'Os campos descrição e nome são obrigatórios e não podem ser vazios!'});
         }
-        const curso = cursoModel({descricao, nome});
+        const curso = new cursoModel({descricao, nome});
 
         const data = await curso.criar();
         return res.status(201).json({message: 'Registro foi criado corretamente', data});

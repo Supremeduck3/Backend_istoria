@@ -3,7 +3,7 @@ import * as integrantes from './../controllers/integranteControllers.js';
 
 const router = express.Router();
 
-router.post('/integrantes', integrantes.criar);
+router.post('/criar', integrantes.criar);
 router.get('/', integrantes.buscarTodos);
 router.delete('/:id', integrantes.deletar);
 

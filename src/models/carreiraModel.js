@@ -16,8 +16,6 @@ export default class carreirasModel {
         this.titulo = titulo;
         this.descricao = descricao;
         this.ondeAtua = ondeAtua;
-        this.destaque = destaque;
-        this.temaId = temaId;
         this.criadaEm = criadaEm;
         this.atualizadaEm = atualizadaEm;
     }
