@@ -1,7 +1,7 @@
 import prisma from "../lib/prismaClient.js";
 
 
-export default class dicaModel {
+export default class dicasModel {
     constructor({
         id = null,
         ordem,
@@ -20,7 +20,7 @@ export default class dicaModel {
         this.atualizadaEm = atualizadaEm;
     }
     async criar() {
-        return prisma.dica.create({
+        return prisma.dicas.create({
             data: {
                 ordem: this.ordem,
                 nome: this.nome,
@@ -34,7 +34,7 @@ export default class dicaModel {
 
 
     async atualizar() {
-        return prisma.dica.update({
+        return prisma.dicas.update({
             where: { id: this.id },
             data: {
                 ordem: this.ordem,
@@ -45,7 +45,7 @@ export default class dicaModel {
         });
     }
     static async buscarTodos() {
-        return prisma.dica.findMany();
+        return prisma.dicas.findMany();
     }
 
 
@@ -54,9 +54,9 @@ export default class dicaModel {
         if (!data) {
             return null;
         }
-        return new dicas(data);
+        return new dicasModel(data);
     }
       async deletar() {
-    return prisma.dica.delete({ where: { id: this.id } });
+    return prisma.dicas.delete({ where: { id: this.id } });
   }
 }

@@ -54,7 +54,7 @@ export default class periodoModel {
         if (!data) {
             return null;
         }
-        return new periodo(data);
+        return new periodoModel(data);
     }
     async deletar() {
         return prisma.periodo.delete({ where: { id: this.id } });

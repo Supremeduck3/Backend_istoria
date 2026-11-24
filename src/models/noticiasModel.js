@@ -65,7 +65,7 @@ export default class noticiasModel {
         if (!data) {
             return null;
         }
-        return new noticias(data);
+        return new noticiasModel(data);
     }
     async deletar() {
         return prisma.noticias.delete({ where: { id: this.id } });

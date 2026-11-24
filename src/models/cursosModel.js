@@ -50,7 +50,7 @@ export default class cursoModel {
         if (!data) {
             return null;
         }
-        return new Cursos(data);
+        return new cursoModel(data);
     }
     async deletar() {
         return prisma.cursos.delete({ where: { id: this.id } });

@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "dev": "cls && nodemon /server.js"
+    "dev": "cls && nodemon ./server.js"
   },
   "keywords": [],
   "type": "module",

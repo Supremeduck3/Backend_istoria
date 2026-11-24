@@ -13,7 +13,7 @@ export const criar = async (req, res) => {
         if(campos.some(campo => typeof campo != 'string')){
             return res.status(400).json({error: "Os campos nome e descrição devem ser caracteres(String) "});
         }
-        if(!tipo || !descricao || !nome) {
+        if(!ordem || !descricao || !nome) {
             return res.status(400).json({error: 'Os campos descrição e nome são obrigatórios e não podem ser vazios!'});
         }
         const curso = new cursoModel({descricao, nome});
