@@ -7,6 +7,8 @@ import cursosRoutes from './src/routes/cursosRoutes.js';
 import dicasRoutes from './src/routes/dicaRoutes.js';
 import estagioRoutes from './src/routes/estagioRoutes.js';
 import noticiasRoutes from './src/routes/noticiasRoutes.js';
+import integrantesRoutes from './src/routes/integranteRoutes.js';
+import videosRoutes from './src/routes/videosRoutes.js';
 
 app.use(cors());
 app.use(express.json());
@@ -24,6 +26,8 @@ app.use('/cursos',cursosRoutes);
 app.use('/dicas',dicasRoutes);
 app.use('/estagio',estagioRoutes);
 app.use('/noticias', noticiasRoutes);
+app.use('/integrantes', integrantesRoutes);
+app.use('/videos', videosRoutes);
 
 
 app.use((req,res)=>{

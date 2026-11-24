@@ -1,4 +1,3 @@
-import { json } from 'express';
 import noticiasModel from './../models/noticiasModel.js'
 
 export const criar = async (req, res) => {
@@ -7,23 +6,30 @@ export const criar = async (req, res) => {
         if (!req.body) {
             return res.status(400).json({ error: 'A requisição está vazia' });
         }
-        const { Url, categoria, titulo, linha_fina, autor, Data, corpo_texto } = req.body;
-        const campos = [Url,categoria, titulo, linha_fina, corpo_texto]
+        const { fotoUrl, categoria, titulo, linhaFina, autor, publicadaEm, corpo } = req.body;
+        const campos = [categoria, titulo, linhaFina, corpo, autor]
 
-        if(campos.some(campo => typeof campo != "string")){
-            return res.status(400).json({error:"Os campos categoria, url, linha fina, autor e corpo do texto tem que ser em forma de caracteres(String)"});
+        if(campos.some(campo => typeof campo != "string") || (fotoUrl !== undefined && typeof fotoUrl != "string")){
+            return res.status(400).json({error:"Os campos categoria, titulo, linha fina, corpo, autor e foto url tem que ser em forma de caracteres(String)"});
         }
-        if(typeof autor != "string"){
-            return res.status(400)({error:"o Campo autor tem que ser uma string"})
+        if (!categoria || !titulo || !linhaFina || !corpo || !autor) {
+            return res.status(400).json({ error: 'O campo de Categoria, Titulo, linha fina, corpo do texto e autor, não podem estar vazios' });
         }
-
-        if(campos.some(campo => campo.length <= 5)){
-            return res.status(400).json({error:"Nenhum dos campos pode ter menos de 6 caracteres"});
+        if([titulo, linhaFina, corpo].some(campo => campo.length <= 5)){
+            return res.status(400).json({error:"Os campos titulo, linha fina e corpo não podem ter menos de 6 caracteres"});
         }
-        if (!categoria || !titulo || !linha_fina || !corpo_texto || !autor) {
-            return res.status(400).json({ error: 'O campo de Categoria, Titulo, linha_fina, corpo do texto e autor, não podem estar vazios' });
+        if (publicadaEm !== undefined && isNaN(new Date(publicadaEm))) {
+            return res.status(400).json({ error: 'A data de publicação é inválida' });
         }
-        const noticia = new noticiasModel({ Url, categoria, titulo, linha_fina, autor, Data, corpo_texto });
+        const noticia = new noticiasModel({
+            fotoUrl,
+            categoria,
+            titulo,
+            linhaFina,
+            autor,
+            corpo,
+            publicadaEm: publicadaEm !== undefined ? new Date(publicadaEm) : undefined,
+        });
 
         const data = await noticia.criar();
         return res.status(201).json({message: 'Registro foi criado certo', data});
@@ -35,16 +41,12 @@ export const criar = async (req, res) => {
 
 export const buscarTodos = async (req, res ) => {
     try{
-        const registros = new noticiasModel.buscarTodos(req.query);
-
-    if(!registros || registros.length === 0){
-        return res.status(400).json({error:"Registros vazios"});
-    }
-    return res.status(200).json(registros);
+        const data = await noticiasModel.buscarTodos();
+        return res.status(200).json({ data });
     }catch (error){
-        console.error('Erro ao buscar registros');
+        console.error('Erro ao buscar registros:', error);
+        return res.status(500).json({ error: 'Erro ao buscar registros.' });
     }
-
 }
 export const atualizar = async (req, res) => {
     try {
@@ -64,31 +66,34 @@ export const atualizar = async (req, res) => {
             return res.status(404).json({ error: 'Registro não encontrado para atualizar.' });
         }
 
-        if (req.body.noticias !== undefined) {
+        if (req.body.categoria !== undefined) {
             noticias.categoria = req.body.categoria;
         }
-        if (req.body.noticias !== undefined) {
-            noticias.Url = req.body.Url;
+        if (req.body.fotoUrl !== undefined) {
+            noticias.fotoUrl = req.body.fotoUrl;
         }
-        if (req.body.noticias !== undefined) {
+        if (req.body.titulo !== undefined) {
             noticias.titulo = req.body.titulo;
         }
-        if (req.body.noticias !== undefined) {
-            noticias.linha_fina = req.body.linha_fina;
+        if (req.body.linhaFina !== undefined) {
+            noticias.linhaFina = req.body.linhaFina;
         }
-        if (req.body.noticias !== undefined) {
+        if (req.body.autor !== undefined) {
             noticias.autor = req.body.autor;
         }
-        if (req.body.noticias !== undefined) {
-            noticias.Data = req.body.Data;
+        if (req.body.publicadaEm !== undefined) {
+            if (isNaN(new Date(req.body.publicadaEm))) {
+                return res.status(400).json({ error: 'A data de publicação é inválida' });
+            }
+            noticias.publicadaEm = new Date(req.body.publicadaEm);
         }
-        if (req.body.noticias !== undefined) {
-            noticias.corpo_texto = req.body.corpo_texto;
+        if (req.body.corpo !== undefined) {
+            noticias.corpo = req.body.corpo;
         }
 
         const data = await noticias.atualizar();
 
-        return res.status(200).json({ message: `O registro "${data.titulo}" foi atualizado com sucesso!, data `});
+        return res.status(200).json({ message: `O registro "${data.titulo}" foi atualizado com sucesso!`, data });
     } catch (error) {
         console.error('Erro ao atualizar:', error);
         return res.status(500).json({ error: 'Erro ao atualizar registro.' });
@@ -123,7 +128,7 @@ export const deletar = async (req, res) => {
             return res.status(400).json({ error: 'ID inválido.' });
         }
 
-        const Noticia = await Noti.buscarPorId(parseInt(id));
+        const Noticia = await noticiasModel.buscarPorId(parseInt(id));
 
         if (!Noticia) {
             return res.status(404).json({ error: 'Registro não encontrado para deletar.' });
@@ -131,7 +136,7 @@ export const deletar = async (req, res) => {
 
         await Noticia.deletar();
 
-        return res.status(200).json({ message: `O registro ${Noticia.titulo}" foi deletado com sucesso!, deletado: Dica `});
+        return res.status(200).json({ message: `O registro "${Noticia.titulo}" foi deletado com sucesso!`, deletado: Noticia });
     } catch (error) {
         console.error('Erro ao deletar:', error);
         return res.status(500).json({ error: 'Erro ao deletar registro.' });

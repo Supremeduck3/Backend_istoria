@@ -16,9 +16,6 @@ export const criar = async (req, res) => {
         if(campos.some(campo => campo.length <= 5)){
             return res.status(400).json({error:"Nenhum dos campos pode ter menos de 6 caracteres"});
         }
-        if (!ordem || !titulo || !descricao) {
-            return res.status(400).json({ error: 'O campo de Categoria, Titulo, linha_fina, corpo do texto e autor, não podem estar vazios' });
-        }
         const estagio = new estagioModel({ ordem, titulo,descricao});
 
         const data = await estagio.criar();
@@ -31,17 +28,35 @@ export const criar = async (req, res) => {
 
 export const buscarTodos = async (req, res ) => {
     try{
-        const registros = await estagioModel.buscarTodos(req.query);
-
-    if(!registros || registros.length === 0){
-        return res.status(400).json({error:"Registros vazios"});
-    }
-    return res.status(200).json(registros);
+        const data = await estagioModel.buscarTodos();
+        return res.status(200).json({ data });
     }catch (error){
-        console.error('Erro ao buscar registros');
+        console.error('Erro ao buscar registros:', error);
+        return res.status(500).json({ error: 'Erro ao buscar registros.' });
     }
-
 }
+
+export const buscarPorId = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (isNaN(id)) {
+            return res.status(400).json({ error: 'O ID enviado não é um número válido.' });
+        }
+
+        const estagio = await estagioModel.buscarPorId(parseInt(id));
+
+        if (!estagio) {
+            return res.status(404).json({ error: 'Registro não encontrado.' });
+        }
+
+        return res.status(200).json({ data: estagio });
+    } catch (error) {
+        console.error('Erro ao buscar:', error);
+        return res.status(500).json({ error: 'Erro ao buscar registro.' });
+    }
+};
+
 export const atualizar = async (req, res) => {
     try {
         const { id } = req.params;
@@ -60,19 +75,19 @@ export const atualizar = async (req, res) => {
             return res.status(404).json({ error: 'Registro não encontrado para atualizar.' });
         }
 
-        if (req.body.estagio !== undefined) {
+        if (req.body.ordem !== undefined) {
             estagio.ordem = req.body.ordem;
         }
-        if (req.body.estagio !== undefined) {
+        if (req.body.titulo !== undefined) {
             estagio.titulo = req.body.titulo;
         }
-        if (req.body.estagio !== undefined) {
+        if (req.body.descricao !== undefined) {
             estagio.descricao = req.body.descricao;
         }
 
         const data = await estagio.atualizar();
 
-        return res.status(200).json({ message: `O registro "${data.titulo}" foi atualizado com sucesso!, data `});
+        return res.status(200).json({ message: `O registro "${data.titulo}" foi atualizado com sucesso!`, data });
     } catch (error) {
         console.error('Erro ao atualizar:', error);
         return res.status(500).json({ error: 'Erro ao atualizar registro.' });
@@ -96,7 +111,7 @@ export const deletar = async (req, res) => {
 
         await Estagio.deletar();
 
-        return res.status(200).json({ message: `O registro ${Estagio.titulo}" foi deletado com sucesso!, deletado: Dica `});
+        return res.status(200).json({ message: `O registro "${Estagio.titulo}" foi deletado com sucesso!`, deletado: Estagio });
     } catch (error) {
         console.error('Erro ao deletar:', error);
         return res.status(500).json({ error: 'Erro ao deletar registro.' });

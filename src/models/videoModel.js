@@ -58,7 +58,7 @@ export default class videoModel {
         if (!data) {
             return null;
         }
-        return new video(data);
+        return new videoModel(data);
     }
     async deletar() {
         return prisma.video.delete({ where: { id: this.id } });

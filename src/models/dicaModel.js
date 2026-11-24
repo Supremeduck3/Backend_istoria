@@ -50,7 +50,7 @@ export default class dicasModel {
 
 
     static async buscarPorId(id) {
-        const data = await prisma.dica.findUnique({ where: { id } });
+        const data = await prisma.dicas.findUnique({ where: { id } });
         if (!data) {
             return null;
         }

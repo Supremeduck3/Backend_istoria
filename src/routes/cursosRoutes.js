@@ -4,6 +4,7 @@ import * as cursos from './../controllers/cursosControllers.js';
 const router = express.Router();
 
 router.post('/criar',cursos.criar);
+router.get('/', cursos.buscarTodos);
 router.get('/:id', cursos.buscarPorId);
 router.delete('/:id',cursos.deletar);
 router.put('/:id', cursos.atualizar);

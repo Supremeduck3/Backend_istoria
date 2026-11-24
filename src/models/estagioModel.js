@@ -35,7 +35,6 @@ export default class estagioModel {
             where: { id: this.id },
             data: {
                 ordem: this.ordem,
-                nome: this.nome,
                 descricao: this.descricao,
                 titulo: this.titulo,
             },
