@@ -2,8 +2,10 @@ import express from 'express';
 import cors from 'cors';
 const app = express();
 
-import carreirasRoutes from './../Backend_istoria/src/routes/carreirasRoutes.js'
-import cursosRoutes from './src/routes/cursosRoutes.js'
+import carreirasRoutes from './../Backend_istoria/src/routes/carreirasRoutes.js';
+import cursosRoutes from './src/routes/cursosRoutes.js';
+import dicasRoutes from './src/routes/dicaRoutes.js';
+import estagioRoutes from './src/routes/estagioRoutes.js'
 
 app.use(cors());
 app.use(express.json());
@@ -18,6 +20,8 @@ app.get('/', (req,res)=>{
 
 app.use('/carreiras',carreirasRoutes);
 app.use('/cursos',cursosRoutes);
+app.use('/dicas',dicasRoutes);
+app.use('/estagio',estagioRoutes);
 
 
 app.use((req,res)=>{

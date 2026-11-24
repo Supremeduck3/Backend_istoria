@@ -31,30 +31,8 @@ export default class integranteModel {
             },
         })
     }
-
-
-    async atualizar() {
-        return prisma.integrante.update({
-            where: { id: this.id },
-            data: {
-                cargo: this.cargo,
-                nome: this.nome,
-                descriaoCargo: this.descriaoCargo,
-                fotoUrl: this.fotoUrl,
-            },
-        });
-    }
     static async buscarTodos() {
         return prisma.integrante.findMany();
-    }
-
-
-    static async buscarPorId(id) {
-        const data = await prisma.integrante.findUnique({ where: { id } });
-        if (!data) {
-            return null;
-        }
-        return new integrante(data);
     }
       async deletar() {
     return prisma.integrante.delete({ where: { id: this.id } });
