@@ -1,4 +1,3 @@
-
 import cursoModel from './../models/cursosModel.js';
 
 export const criar = async (req, res) => {
@@ -7,16 +6,16 @@ export const criar = async (req, res) => {
         if(!req.body) {
             return res.status(400).json({error: 'A requisição está vazia'});
         }
-         const {nome, descricao} = req.body;
-        const campos = [ nome, descricao]
+        const {nome, descricao, ordem} = req.body;
+        const campos = [nome, descricao]
 
         if(campos.some(campo => typeof campo != 'string')){
             return res.status(400).json({error: "Os campos nome e descrição devem ser caracteres(String) "});
         }
-        if(!ordem || !descricao || !nome) {
+        if(!descricao || !nome) {
             return res.status(400).json({error: 'Os campos descrição e nome são obrigatórios e não podem ser vazios!'});
         }
-        const curso = new cursoModel({descricao, nome});
+        const curso = new cursoModel({descricao, nome, ordem});
 
         const data = await curso.criar();
         return res.status(201).json({message: 'Registro foi criado corretamente', data});
@@ -25,6 +24,17 @@ export const criar = async (req, res) => {
         return res.status(500).json({error: 'Erro interno ao salvar registro'});
     }
 }
+
+export const buscarTodos = async (req, res) => {
+    try {
+        const data = await cursoModel.buscarTodos();
+        return res.status(200).json({ data });
+    } catch (error) {
+        console.error('Erro ao buscar:', error);
+        return res.status(500).json({ error: 'Erro ao buscar registros.' });
+    }
+};
+
 export const atualizar = async (req, res) => {
     try {
         const { id } = req.params;
@@ -43,15 +53,18 @@ export const atualizar = async (req, res) => {
             return res.status(404).json({ error: 'Registro não encontrado para atualizar.' });
         }
 
-        if (req.body.cursos !== undefined) {
+        if (req.body.descricao !== undefined) {
             cursos.descricao = req.body.descricao;
         }
-        if (req.body.cursos !== undefined) {
+        if (req.body.nome !== undefined) {
             cursos.nome = req.body.nome;
+        }
+        if (req.body.ordem !== undefined) {
+            cursos.ordem = req.body.ordem;
         }
         const data = await cursos.atualizar();
 
-        return res.status(200).json({ message: `O registro "${data.nome}" foi atualizado com sucesso!, data `});
+        return res.status(200).json({ message: `O registro "${data.nome}" foi atualizado com sucesso!`, data });
     } catch (error) {
         console.error('Erro ao atualizar:', error);
         return res.status(500).json({ error: 'Erro ao atualizar registro.' });
@@ -65,7 +78,7 @@ export const buscarPorId = async (req, res) => {
             return res.status(400).json({ error: 'O ID enviado não é um número válido.' });
         }
 
-        const curso = await cursosModel.buscarPorId(parseInt(id));
+        const curso = await cursoModel.buscarPorId(parseInt(id));
 
         if (!curso) {
             return res.status(404).json({ error: 'Registro não encontrado.' });
@@ -86,7 +99,7 @@ export const deletar = async (req, res) => {
             return res.status(400).json({ error: 'ID inválido.' });
         }
 
-        const curso = await curso.buscarPorId(parseInt(id));
+        const curso = await cursoModel.buscarPorId(parseInt(id));
 
         if (!curso) {
             return res.status(404).json({ error: 'Registro não encontrado para deletar.' });
@@ -94,7 +107,7 @@ export const deletar = async (req, res) => {
 
         await curso.deletar();
 
-        return res.status(200).json({ message: `O registro ${curso.nome}" foi deletado com sucesso!, deletado: curso `});
+        return res.status(200).json({ message: `O registro "${curso.nome}" foi deletado com sucesso!`, deletado: curso });
     } catch (error) {
         console.error('Erro ao deletar:', error);
         return res.status(500).json({ error: 'Erro ao deletar registro.' });

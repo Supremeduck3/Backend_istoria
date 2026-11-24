@@ -6,7 +6,7 @@ export default class integranteModel {
         id = null,
         cargo,
         nome,
-        descriaoCargo,
+        descricaoCargo,
         fotoUrl,
         criadaEm,
         atualizadaEm
@@ -14,7 +14,7 @@ export default class integranteModel {
         this.id = id;
         this.cargo = cargo;
         this.nome = nome;
-        this.descriaoCargo = descriaoCargo;
+        this.descricaoCargo = descricaoCargo;
         this.fotoUrl = fotoUrl;
         this.criadaEm = criadaEm;
         this.atualizadaEm = atualizadaEm;
@@ -24,15 +24,33 @@ export default class integranteModel {
             data: {
                 cargo: this.cargo,
                 nome: this.nome,
-                descriaoCargo: this.descriaoCargo,
+                descricaoCargo: this.descricaoCargo,
                 fotoUrl: this.fotoUrl,
                 criadaEm: this.criadaEm,
                 atualizadaEm: this.atualizadaEm,
             },
         })
     }
+    async atualizar() {
+        return prisma.integrante.update({
+            where: { id: this.id },
+            data: {
+                cargo: this.cargo,
+                nome: this.nome,
+                descricaoCargo: this.descricaoCargo,
+                fotoUrl: this.fotoUrl,
+            },
+        });
+    }
     static async buscarTodos() {
         return prisma.integrante.findMany();
+    }
+    static async buscarPorId(id) {
+        const data = await prisma.integrante.findUnique({ where: { id } });
+        if (!data) {
+            return null;
+        }
+        return new integranteModel(data);
     }
       async deletar() {
     return prisma.integrante.delete({ where: { id: this.id } });

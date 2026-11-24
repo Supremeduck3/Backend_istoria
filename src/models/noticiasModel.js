@@ -46,12 +46,13 @@ export default class noticiasModel {
         return prisma.noticias.update({
             where: { id: this.id },
             data: {
-                                titulo: this.titulo,
+                titulo: this.titulo,
                 categoria: this.categoria,
                 linhaFina: this.linhaFina,
                 corpo: this.corpo,
                 autor: this.autor,
                 fotoUrl: this.fotoUrl,
+                publicadaEm: this.publicadaEm,
             },
         });
     }

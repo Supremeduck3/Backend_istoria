@@ -50,7 +50,7 @@ export default class simuladoModel {
         if (!data) {
             return null;
         }
-        return new simulado(data);
+        return new simuladoModel(data);
     }
     async deletar() {
         return prisma.simulado.delete({ where: { id: this.id } });

@@ -6,7 +6,7 @@ export const criar = async (req, res) => {
         if(!req.body) {
             return res.status(400).json({error: 'A requisição está vazia'});
         }
-        const {titulo, descricao, ondeAtua} = req.body;
+        const {titulo, descricao, ondeAtua, ordem} = req.body;
         const campos = [titulo, descricao, ondeAtua]
 
         if(campos.some(campo => typeof campo != 'string')){
@@ -15,7 +15,7 @@ export const criar = async (req, res) => {
         if(!titulo || !descricao || !ondeAtua) {
             return res.status(400).json({error: 'Os campos título descrição e onde atua são obrigatórios e não podem ser vazios!'});
         }
-        const carreira = new carreirasModel({titulo, descricao, ondeAtua});
+        const carreira = new carreirasModel({titulo, descricao, ondeAtua, ordem});
 
         const data = await carreira.criar();
         return res.status(201).json({message: 'Registro foi criado corretamente', data});
@@ -24,6 +24,17 @@ export const criar = async (req, res) => {
         return res.status(500).json({error: 'Erro interno ao salvar registro'});
     }
 }
+
+export const buscarTodos = async (req, res) => {
+    try {
+        const data = await carreirasModel.buscarTodos();
+        return res.status(200).json({ data });
+    } catch (error) {
+        console.error('Erro ao buscar:', error);
+        return res.status(500).json({ error: 'Erro ao buscar registros.' });
+    }
+};
+
 export const atualizar = async (req, res) => {
     try {
         const { id } = req.params;
@@ -42,18 +53,21 @@ export const atualizar = async (req, res) => {
             return res.status(404).json({ error: 'Registro não encontrado para atualizar.' });
         }
 
-        if (req.body.carreiras !== undefined) {
+        if (req.body.titulo !== undefined) {
             carreiras.titulo = req.body.titulo;
         }
-        if (req.body.carreiras !== undefined) {
+        if (req.body.descricao !== undefined) {
             carreiras.descricao = req.body.descricao;
         }
-        if (req.body.carreiras !== undefined) {
+        if (req.body.ondeAtua !== undefined) {
             carreiras.ondeAtua = req.body.ondeAtua;
+        }
+        if (req.body.ordem !== undefined) {
+            carreiras.ordem = req.body.ordem;
         }
         const data = await carreiras.atualizar();
 
-        return res.status(200).json({ message: `O registro "${data.titulo}" foi atualizado com sucesso!, data `});
+        return res.status(200).json({ message: `O registro "${data.titulo}" foi atualizado com sucesso!`, data });
     } catch (error) {
         console.error('Erro ao atualizar:', error);
         return res.status(500).json({ error: 'Erro ao atualizar registro.' });
@@ -96,7 +110,7 @@ export const deletar = async (req, res) => {
 
         await Carreira.deletar();
 
-        return res.status(200).json({ message: `O registro ${Carreira.titulo}" foi deletado com sucesso!, deletado: Dica `});
+        return res.status(200).json({ message: `O registro "${Carreira.titulo}" foi deletado com sucesso!`, deletado: Carreira });
     } catch (error) {
         console.error('Erro ao deletar:', error);
         return res.status(500).json({ error: 'Erro ao deletar registro.' });

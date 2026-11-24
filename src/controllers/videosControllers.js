@@ -5,22 +5,18 @@ export const criar = async (req, res) => {
         if (!req.body) {
             return res.status(400).json({ error: 'A requisição está vazia' });
         }
-        const {ordem, titulo,descricao } = req.body;
-        const campos = [titulo,descricao]
+        const { titulo, categoria, descricao, url, fonte } = req.body;
+        const campos = [titulo, categoria, url, fonte]
 
-        if(campos.some(campo => typeof campo != "string")){
-            return res.status(400).json({error:"Os campos titulo,descricao tem que ser em forma de caracteres(String)"});
+        if(campos.some(campo => typeof campo != "string") || (descricao !== undefined && typeof descricao != "string")){
+            return res.status(400).json({error:"Os campos titulo, categoria, descricao, url e fonte tem que ser em forma de caracteres(String)"});
         }
+        if (!titulo || !categoria || !url || !fonte) {
+            return res.status(400).json({ error: 'Os campos titulo, categoria, url e fonte não podem estar vazios' });
+        }
+        const video = new videoModel({ titulo, categoria, descricao, url, fonte });
 
-        if(campos.some(campo => campo.length <= 5)){
-            return res.status(400).json({error:"Nenhum dos campos pode ter menos de 6 caracteres"});
-        }
-        if (!ordem || !titulo || !descricao) {
-            return res.status(400).json({ error: 'O campo de Categoria, Titulo, linha_fina, corpo do texto e autor, não podem estar vazios' });
-        }
-        const estagio = new videoModel({ ordem, titulo,descricao});
-
-        const data = await estagio.criar();
+        const data = await video.criar();
         return res.status(201).json({message: 'Registro foi criado certo', data});
     }catch(error){
          console.error('Erro ao criar:', error);
@@ -30,17 +26,35 @@ export const criar = async (req, res) => {
 
 export const buscarTodos = async (req, res ) => {
     try{
-        const registros = new estagioModels.buscarTodos(req.query);
-
-    if(!registros || registros.length === 0){
-        return res.status(400).json({error:"Registros vazios"});
-    }
-    return res.status(200).json(registros);
+        const data = await videoModel.buscarTodos();
+        return res.status(200).json({ data });
     }catch (error){
-        console.error('Erro ao buscar registros');
+        console.error('Erro ao buscar registros:', error);
+        return res.status(500).json({ error: 'Erro ao buscar registros.' });
     }
-
 }
+
+export const buscarPorId = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (isNaN(id)) {
+            return res.status(400).json({ error: 'O ID enviado não é um número válido.' });
+        }
+
+        const video = await videoModel.buscarPorId(parseInt(id));
+
+        if (!video) {
+            return res.status(404).json({ error: 'Registro não encontrado.' });
+        }
+
+        return res.status(200).json({ data: video });
+    } catch (error) {
+        console.error('Erro ao buscar:', error);
+        return res.status(500).json({ error: 'Erro ao buscar registro.' });
+    }
+};
+
 export const atualizar = async (req, res) => {
     try {
         const { id } = req.params;
@@ -53,25 +67,31 @@ export const atualizar = async (req, res) => {
             return res.status(400).json({ error: 'Corpo da requisição vazio. Envie os dados!' });
         }
 
-        const estagio = await estagioModels.buscarPorId(parseInt(id));
+        const video = await videoModel.buscarPorId(parseInt(id));
 
-        if (!estagio) {
+        if (!video) {
             return res.status(404).json({ error: 'Registro não encontrado para atualizar.' });
         }
 
-        if (req.body.estagio !== undefined) {
-            estagio.ordem = req.body.ordem;
+        if (req.body.titulo !== undefined) {
+            video.titulo = req.body.titulo;
         }
-        if (req.body.estagio !== undefined) {
-            estagio.titulo = req.body.titulo;
+        if (req.body.categoria !== undefined) {
+            video.categoria = req.body.categoria;
         }
-        if (req.body.estagio !== undefined) {
-            estagio.descricao = req.body.descricao;
+        if (req.body.descricao !== undefined) {
+            video.descricao = req.body.descricao;
+        }
+        if (req.body.url !== undefined) {
+            video.url = req.body.url;
+        }
+        if (req.body.fonte !== undefined) {
+            video.fonte = req.body.fonte;
         }
 
-        const data = await estagio.atualizar();
+        const data = await video.atualizar();
 
-        return res.status(200).json({ message: `O registro "${data.titulo}" foi atualizado com sucesso!, data `});
+        return res.status(200).json({ message: `O registro "${data.titulo}" foi atualizado com sucesso!`, data });
     } catch (error) {
         console.error('Erro ao atualizar:', error);
         return res.status(500).json({ error: 'Erro ao atualizar registro.' });
@@ -87,15 +107,15 @@ export const deletar = async (req, res) => {
             return res.status(400).json({ error: 'ID inválido.' });
         }
 
-        const Estagio = await Estagio.buscarPorId(parseInt(id));
+        const video = await videoModel.buscarPorId(parseInt(id));
 
-        if (!Estagio) {
+        if (!video) {
             return res.status(404).json({ error: 'Registro não encontrado para deletar.' });
         }
 
-        await Estagio.deletar();
+        await video.deletar();
 
-        return res.status(200).json({ message: `O registro ${Estagio.titulo}" foi deletado com sucesso!, deletado: Dica `});
+        return res.status(200).json({ message: `O registro "${video.titulo}" foi deletado com sucesso!`, deletado: video });
     } catch (error) {
         console.error('Erro ao deletar:', error);
         return res.status(500).json({ error: 'Erro ao deletar registro.' });
